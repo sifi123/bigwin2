@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crown Investment Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 450px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #667eea;
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        .toggle-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            max-width: 900px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .header h2 {
+            color: #667eea;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .balance-card h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .balance-card .amount {
+            font-size: 42px;
+            font-weight: 700;
+        }
+
+        .plan-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .plan-info h4 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .plan-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .plan-detail span:last-child {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .action-btn {
+            padding: 20px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .action-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .plan-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .plan-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .plan-card:hover {
+            transform: scale(1.05);
+        }
+
+        .plan-card .plan-price {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .plan-card .plan-return {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            color: #667eea;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .reward-claimed {
+            background: #4caf50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .referral-code {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .referral-code .code {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .invite-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .invite-item strong {
+            color: #667eea;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .file-upload {
+            border: 2px dashed #e0e0e0;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: border 0.3s;
+        }
+
+        .file-upload:hover {
+            border-color: #667eea;
+        }
+
+        .file-upload input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Landing Page -->
+    <div id="landingPage" class="container">
+        <div class="logo">
+            <h1>👑 Crown Investment</h1>
+            <p>Invest Smart, Earn More</p>
+        </div>
+
+        <!-- Login Form -->
+        <div id="loginForm">
+            <h2 style="margin-bottom: 20px; color: #333;">Login</h2>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="loginEmail" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPassword" placeholder="Enter your password">
+            </div>
+            <button class="btn" onclick="login()">Login</button>
+            <div class="toggle-link" onclick="toggleForm()">Don't have an account? Sign up</div>
+        </div>
+
+        <!-- Signup Form -->
+        <div id="signupForm" class="hidden">
+            <h2 style="margin-bottom: 20px; color: #333;">Sign Up</h2>
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="signupName" placeholder="Enter your full name">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="signupEmail" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="signupPassword" placeholder="Create a password">
+            </div>
+            <div class="form-group">
+                <label>Referral Code (Optional)</label>
+                <input type="text" id="signupReferral" placeholder="Enter referral code">
+            </div>
+            <button class="btn" onclick="signup()">Sign Up</button>
+            <div class="toggle-link" onclick="toggleForm()">Already have an account? Login</div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="container dashboard hidden">
+        <div class="header">
+            <h2>Dashboard</h2>
+            <button class="btn" onclick="logout()" style="width: auto; padding: 10px 20px;">Logout</button>
+        </div>
+
+        <div class="balance-card">
+            <h3>Total Balance</h3>
+            <div class="amount">Rs. <span id="userBalance">0</span></div>
+        </div>
+
+        <div class="plan-info">
+            <h4>Active Plan Information</h4>
+            <div class="plan-detail">
+                <span>Plan Amount:</span>
+                <span id="activePlanAmount">No Active Plan</span>
+            </div>
+            <div class="plan-detail">
+                <span>Daily Return:</span>
+                <span id="dailyReturn">-</span>
+            </div>
+            <div class="plan-detail">
+                <span>Total Return:</span>
+                <span id="totalReturn">-</span>
+            </div>
+        </div>
+
+        <div class="button-grid">
+            <div class="action-btn" onclick="showDailyReward()">
+                🎁 Daily Reward
+            </div>
+            <div class="action-btn" onclick="showPlans()">
+                👑 Plans
+            </div>
+            <div class="action-btn" onclick="showDeposit()">
+                💰 Deposit
+            </div>
+            <div class="action-btn" onclick="showWithdraw()">
+                💸 Withdraw
+            </div>
+            <div class="action-btn" onclick="showInvite()">
+                👥 Invite
+            </div>
+            <div class="action-btn" onclick="showProfile()">
+             👤 Profile
+            </div>
+            <div class="action-btn" onclick="showHelp()">
+           ❓ Help
+            </div>
+
+            <div class="action-btn" onclick="logout()">
+                🚪 Logout
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals will be inserted here -->
+    <div id="modalContainer"></div>
+
+    <script>
+        // Data Storage
+        let users = {};
+        let currentUser = null;
+        
+        // Initialize demo data
+        function initDemo() {
+            // Create a demo user
+            users = {
+                'demo@example.com': {
+                    name: 'Demo User',
+                    email: 'demo@example.com',
+                    password: 'demo123',
+                    balance: 500,
+                    activePlan: null,
+                    referralCode: 'CROWN' + Math.random().toString(36).substr(2, 6).toUpperCase(),
+                    referredBy: null,
+                    referrals: [],
+                    lastReward: null,
+                    transactions: []
+                }
+            };
+        }
+
+        initDemo();
+
+        // Plans Configuration
+       const plans = [500, 1000, 2000, 3000, 5000, 10000].map(amount => {
+    const total = amount * 1.8; // 80% profit in 30 days
+    const daily = (total - amount) / 30; // daily profit
+    return {
+        amount,
+        daily: Math.round(daily),
+        total: Math.round(total),
+        days: 30
+    };
+});
+
+
+        // Toggle between login and signup
+        function toggleForm() {
+            document.getElementById('loginForm').classList.toggle('hidden');
+            document.getElementById('signupForm').classList.toggle('hidden');
+        }
+
+        // Signup
+        function signup() {
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const referralCode = document.getElementById('signupReferral').value;
+
+            if (!name || !email || !password) {
+                alert('Please fill all required fields');
+                return;
+            }
+
+            if (users[email]) {
+                alert('Email already registered');
+                return;
+            }
+
+            const userReferralCode = 'CROWN' + Math.random().toString(36).substr(2, 6).toUpperCase();
+            
+            users[email] = {
+                name,
+                email,
+                password,
+                balance: 0,
+                activePlan: null,
+                referralCode: userReferralCode,
+                referredBy: referralCode || null,
+                referrals: [],
+                lastReward: null,
+                transactions: []
+            };
+
+            // Add to referrer's list
+            if (referralCode) {
+                for (let userEmail in users) {
+                    if (users[userEmail].referralCode === referralCode) {
+                        users[userEmail].referrals.push(email);
+                        break;
+                    }
+                }
+            }
+
+            alert('Signup successful! Please login.');
+            toggleForm();
+        }
+
+        // Login
+        function login() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                alert('Please enter email and password');
+                return;
+            }
+
+            if (!users[email] || users[email].password !== password) {
+                alert('Invalid credentials');
+                return;
+            }
+
+            currentUser = email;
+            showDashboard();
+        }
+
+      function showDashboard() {
+    document.getElementById('landingPage').classList.add('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
+
+    // یہاں profit update ہوگا
+    updateProfits();
+
+    updateDashboard();
+}
+
+
+        // Update Dashboard
+        function updateDashboard() {
+            const user = users[currentUser];
+            document.getElementById('userBalance').textContent = user.balance.toFixed(2);
+
+            if (user.activePlan) {
+                const plan = plans.find(p => p.amount === user.activePlan);
+                document.getElementById('activePlanAmount').textContent = `Rs. ${plan.amount}`;
+                document.getElementById('dailyReturn').textContent = `Rs. ${plan.daily}`;
+                document.getElementById('totalReturn').textContent = `Rs. ${plan.total}`;
+            } else {
+                document.getElementById('activePlanAmount').textContent = 'No Active Plan';
+                document.getElementById('dailyReturn').textContent = '-';
+                document.getElementById('totalReturn').textContent = '-';
+            }
+        }
+function updateProfits() {
+    const user = users[currentUser];
+    if (!user || !user.activePlan) return;
+
+    const plan = plans.find(p => p.amount === user.activePlan);
+    if (!plan) return;
+
+    const now = new Date().getTime();
+    const oneDay = 24 * 60 * 60 * 1000; // 24 hours in ms
+
+    if (!user.lastProfitClaim) {
+        user.lastProfitClaim = user.planStartDate;
+    }
+
+    // کتنے دن گزر گئے
+    let daysPassed = Math.floor((now - user.lastProfitClaim) / oneDay);
+
+    while (daysPassed > 0) {
+        user.balance += plan.daily; // ایک دن کا profit
+        user.transactions.push({
+            type: 'Daily Profit',
+            amount: plan.daily,
+            date: new Date().toLocaleString()
+        });
+        user.lastProfitClaim += oneDay;
+        daysPassed--;
+    }
+}
+
+
+        // Show Daily Reward
+        function showDailyReward() {
+            const user = users[currentUser];
+            const today = new Date().toDateString();
+
+            let content = '';
+            if (user.lastReward === today) {
+                content = `
+                    <div class="alert alert-error">
+                        You have already claimed your reward today. Come back tomorrow!
+                    </div>
+                `;
+            } else {
+                content = `
+                    <div class="reward-claimed">
+                        <h3>🎁 Daily Reward Available!</h3>
+                        <p style="font-size: 18px; margin-top: 10px;">Claim Rs. 10 now</p>
+                    </div>
+                    <button class="btn" onclick="claimReward()">Claim Reward</button>
+                `;
+            }
+
+            showModal('Daily Reward', content);
+        }
+
+        // Claim Reward
+        function claimReward() {
+            const user = users[currentUser];
+            const today = new Date().toDateString();
+
+            user.balance += 10;
+            user.lastReward = today;
+            user.transactions.push({
+                type: 'Daily Reward',
+                amount: 10,
+                date: new Date().toLocaleString()
+            });
+
+            closeModal();
+            updateDashboard();
+            alert('Reward claimed successfully! Rs. 10 added to your balance.');
+        }
+
+        // Show Plans
+        function showPlans() {
+            let content = '<div class="plan-grid">';
+            plans.forEach((plan, index) => {
+                content += `
+                    <div class="plan-card" onclick="selectPlan(${plan.amount})">
+                        <div class="plan-price">Rs. ${plan.amount}</div>
+                        <div class="plan-return">Daily: Rs. ${plan.daily}</div>
+                        <div class="plan-return">Total: Rs. ${plan.total}</div>
+                    </div>
+                `;
+            });
+            content += '</div>';
+
+            showModal('Investment Plans', content);
+        }
+
+        // Select Plan
+        function selectPlan(amount) {
+            closeModal();
+            showDeposit(amount);
+        }
+
+        // Show Deposit
+        function showDeposit(selectedPlan = null) {
+            const planSelect = selectedPlan ? 
+                `<option value="${selectedPlan}">Rs. ${selectedPlan}</option>` :
+                plans.map(p => `<option value="${p.amount}">Rs. ${p.amount}</option>`).join('');
+
+            const content = `
+                <div class="form-group">
+                    <label>Select Plan</label>
+                    <select id="depositPlan">
+                        ${planSelect}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select id="paymentMethod">
+                        <option value="Easypaisa">Easypaisa</option>
+                        <option value="JazzCash">JazzCash</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Transaction ID</label>
+                    <input type="text" id="transactionId" placeholder="Enter transaction ID">
+                </div>
+                <div class="form-group">
+                    <label>Upload Screenshot</label>
+                    <div class="file-upload" onclick="document.getElementById('screenshot').click()">
+                        <input type="file" id="screenshot" accept="image/*">
+                        <p>📸 Click to upload screenshot</p>
+                        <p style="font-size: 12px; color: #999; margin-top: 5px;">PNG, JPG up to 5MB</p>
+                    </div>
+                </div>
+                <button class="btn" onclick="submitDeposit()">Submit Deposit</button>
+            `;
+
+            showModal('Deposit', content);
+
+            // File upload preview
+            document.getElementById('screenshot').addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    document.querySelector('.file-upload p').textContent = '✅ ' + e.target.files[0].name;
+                }
+            });
+        }
+
+        // Submit Deposit
+        function submitDeposit() {
+            const planAmount = parseInt(document.getElementById('depositPlan').value);
+            const method = document.getElementById('paymentMethod').value;
+            const txId = document.getElementById('transactionId').value;
+            const screenshot = document.getElementById('screenshot').files[0];
+
+            if (!txId || !screenshot) {
+                alert('Please fill all fields and upload screenshot');
+                return;
+            }
+
+            const user = users[currentUser];
+            
+            // For demo, we'll approve directly
+            user.balance += planAmount;
+            user.activePlan = planAmount;
+            user.activePlan = planAmount;
+            user.planStartDate = new Date().getTime();
+            user.lastProfitClaim = null;
+            user.transactions.push({
+                type: 'Deposit',
+                amount: planAmount,
+                method: method,
+                txId: txId,
+                date: new Date().toLocaleString(),
+                status: 'Approved'
+            });
+
+            // Calculate referral bonus if applicable
+            if (user.referredBy) {
+                const bonus = planAmount * 0.20;
+                for (let email in users) {
+                    if (users[email].referralCode === user.referredBy) {
+                        users[email].balance += bonus;
+                        users[email].transactions.push({
+                            type: 'Referral Bonus',
+                            amount: bonus,
+                            from: user.name,
+                            date: new Date().toLocaleString()
+                        });
+                        break;
+                    }
+                }
+            }
+
+            closeModal();
+            updateDashboard();
+            alert(`Deposit approved! Rs. ${planAmount} added to your balance and plan activated.`);
+        }
+
+        // Show Withdraw
+        function showWithdraw() {
+            const user = users[currentUser];
+            const minWithdraw = user.activePlan ? user.activePlan * 0.5 : 0;
+
+            const content = `
+                <div class="alert alert-success">
+                    Available Balance: Rs. ${user.balance.toFixed(2)}<br>
+                    Minimum Withdrawal: Rs. ${minWithdraw.toFixed(2)}
+                </div>
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select id="withdrawMethod">
+                        <option value="Easypaisa">Easypaisa</option>
+                        <option value="JazzCash">JazzCash</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Account Name</label>
+                    <input type="text" id="accountName" placeholder="Enter account name">
+                </div>
+                <div class="form-group">
+                    <label>Account Number</label>
+                    <input type="text" id="accountNumber" placeholder="Enter account number">
+                </div>
+                <div class="form-group">
+                    <label>Amount</label>
+                    <input type="number" id="withdrawAmount" placeholder="Enter amount">
+                </div>
+                <button class="btn" onclick="submitWithdraw(${minWithdraw})">Submit Withdrawal</button>
+            `;
+
+            showModal('Withdraw', content);
+        }
+
+        // Submit Withdraw
+        function submitWithdraw(minWithdraw) {
+            const method = document.getElementById('withdrawMethod').value;
+            const accountName = document.getElementById('accountName').value;
+            const accountNumber = document.getElementById('accountNumber').value;
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+
+            if (!accountName || !accountNumber || !amount) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            const user = users[currentUser];
+
+            if (amount < minWithdraw) {
+                alert(`Minimum withdrawal is Rs. ${minWithdraw.toFixed(2)} (50% of active plan)`);
+                return;
+            }
+
+            if (amount > user.balance) {
+                alert('Insufficient balance');
+                return;
+            }
+
+            user.balance -= amount;
+            user.transactions.push({
+                type: 'Withdrawal',
+                amount: amount,
+                method: method,
+                accountName: accountName,
+                accountNumber: accountNumber,
+                date: new Date().toLocaleString(),
+                status: 'Processing'
+            });
+
+            closeModal();
+            updateDashboard();
+            alert(`Withdrawal request submitted! Rs. ${amount} will be processed within 24 hours.`);
+        }
+
+        // Show Invite
+     function showInvite() {
+    const user = users[currentUser];
+    let totalBonus = 0;
+    let referralList = '';
+
+    // ہر referral پر loop
+    user.referrals.forEach(email => {
+        const referredUser = users[email];
+        if (referredUser && referredUser.activePlan) {
+            const plan = plans.find(p => p.amount === referredUser.activePlan);
+            const bonus = referredUser.activePlan * 0.20; // 20% bonus
+            totalBonus += bonus;
+            referralList += `
+                <div class="invite-item">
+                    <strong>${referredUser.name}</strong><br>
+                    Plan: Rs. ${referredUser.activePlan} | Bonus Earned: Rs. ${bonus.toFixed(2)}
+                </div>
+            `;
+        }
+    });
+
+    if (!referralList) {
+        referralList = '<p style="text-align: center; color: #999;">No referrals yet</p>';
+    }
+
+    const content = `
+        <div class="referral-code">
+            <p><strong>Your Referral Code</strong></p>
+            <div class="code" id="refCode">${user.referralCode}</div>
+            <button class="btn" style="margin-top:10px;" onclick="copyReferralCode()">📋 Copy Code</button>
+            <p style="font-size: 12px; color: #666;">Share this code and earn 20% of their investment!</p>
+        </div>
+        
+        <div class="alert alert-success">
+            <strong>Total Invited Members:</strong> ${user.referrals.length}<br>
+            <strong>Total Bonus Earned:</strong> Rs. ${totalBonus.toFixed(2)}
+        </div>
+
+        <h4 style="margin-bottom: 15px;">Your Referrals</h4>
+        ${referralList}
+    `;
+
+    showModal('Invite & Earn', content);
+}
+function copyReferralCode() {
+    const code = document.getElementById("refCode").innerText;
+    navigator.clipboard.writeText(code).then(() => {
+        alert("Referral code copied: " + code);
+    }).catch(err => {
+        alert("Failed to copy code. Please try manually.");
+    });
+}
+
+function showProfile() {
+    if (!currentUser) {
+        alert("Please login first.");
+        return;
+    }
+
+    const user = users[currentUser];
+    const content = `
+        <div class="form-group">
+            <label><strong>Name:</strong></label>
+            <p>${user.name}</p>
+        </div>
+        <div class="form-group">
+            <label><strong>Email:</strong></label>
+            <p>${user.email}</p>
+        </div>
+        <button class="btn" onclick="logout()">Logout</button>
+    `;
+    showModal("User Profile", content);
+}
+
+function showHelp() {
+    const content = `
+        <div class="form-group">
+            <label><strong>Email Support:</strong></label>
+            <p><a href="mailto:nasirkhan11224111@gmail.com">nasirkhan11224111@gmail.com</a></p>
+        </div>
+        <div class="form-group">
+            <label><strong>Telegram Support:</strong></label>
+            <p><a href="https://t.me/+923176491997" target="_blank">0317-6491997</a></p>
+        </div>
+    `;
+    showModal("Help & Support", content);
+}
+
+        // Logout
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                currentUser = null;
+                document.getElementById('dashboard').classList.add('hidden');
+                document.getElementById('landingPage').classList.remove('hidden');
+                
+                // Clear forms
+                document.getElementById('loginEmail').value = '';
+                document.getElementById('loginPassword').value = '';
+                
+                // Show login form
+                if (!document.getElementById('loginForm').classList.contains('hidden')) {
+                    document.getElementById('loginForm').classList.remove('hidden');
+                    document.getElementById('signupForm').classList.add('hidden');
+                }
+            }
+        }
+
+        // Modal Functions
+        function showModal(title, content) {
+            const modal = `
+                <div class="modal" id="activeModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>${title}</h3>
+                            <button class="close-btn" onclick="closeModal()">×</button>
+                        </div>
+                        ${content}
+                    </div>
+                </div>
+            `;
+            document.getElementById('modalContainer').innerHTML = modal;
+        }
+
+        function closeModal() {
+            document.getElementById('modalContainer').innerHTML = '';
+        }
+
+        // Close modal on outside click
+        document.addEventListener('click', function(e) {
+            if (e.target.id === 'activeModal') {
+                closeModal();
+            }
+
+        });
+    </script>
+</body>
+</html>
